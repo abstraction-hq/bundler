@@ -1,40 +1,40 @@
 package config
 
 import (
-	log "github.com/inconshreveable/log15"
+	"fmt"
 
 	"github.com/spf13/viper"
 )
 
-var logger = log.New("module", "config")
-
-type envConfigs struct {
-	RpcEndpoint     string   `mapstructure:"RPC_ENDPOINT"`
+type Config struct {
+	PrivateKey        string
+	RpcEndpoint       string
+	DatabaseDirectory string
+	Port              int
 }
 
-var ENV *envConfigs
+func NewConfig(network string) *Config {
+	viper.SetDefault("port", 4337)
+	viper.SetDefault("data_directory", "/tmp/bundler")
+	viper.SetDefault("supported_entry_points", "0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789")
 
-func InitEnv() {
-	ENV = loadEnvVariables()
-}
-
-func loadEnvVariables() (config *envConfigs) {
-	viper.AddConfigPath(".")
-	// Tell viper the path/location of your env file. If it is root just add "."
-
-	// Tell viper the name of your file
-	viper.SetConfigName("app")
-
-	// Tell viper the type of your file
+	// Read in from .env file if available
+	viper.SetConfigName(network)
 	viper.SetConfigType("env")
-	// Viper reads all the variables from env file and log error if any found
+	viper.AddConfigPath(".")
 	if err := viper.ReadInConfig(); err != nil {
-		logger.Error("Error reading env file", err)
+		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
+			// Config file not found
+			// Can ignore
+		} else {
+			panic(fmt.Errorf("fatal error config file: %w", err))
+		}
 	}
 
-	// Viper unmarshals the loaded env varialbes into the struct
-	if err := viper.Unmarshal(&config); err != nil {
-		logger.Error("Error un marshal", err)
+	return &Config{
+		PrivateKey:        viper.GetString("private_key"),
+		RpcEndpoint:       viper.GetString("rpc_endpoint"),
+		DatabaseDirectory: viper.GetString("data_directory"),
+		Port:              viper.GetInt("port"),
 	}
-	return
 }
