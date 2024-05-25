@@ -17,30 +17,30 @@ func NewNode() (*Node, error) {
 	return &Node{}, nil
 }
 
-func (b *Node) Start() error {
+func (n *Node) Start() error {
 	logger.Info("Start node...")
-	b.lock.Lock()
-	defer b.lock.Unlock()
+	n.lock.Lock()
+	defer n.lock.Unlock()
 
 	// TODO: add services
 
-	b.stop = make(chan struct{})
+	n.stop = make(chan struct{})
 	return nil
 }
 
-func (b *Node) Wait() {
-	b.lock.RLock()
-	stop := b.stop
+func (n *Node) Wait() {
+	n.lock.RLock()
+	stop := n.stop
 
-	b.lock.RUnlock()
+	n.lock.RUnlock()
 
 	<-stop
 }
 
-func (b *Node) Stop() {
+func (n *Node) Stop() {
 	logger.Warn("Stop node...")
-	b.lock.Lock()
-	defer b.lock.Unlock()
+	n.lock.Lock()
+	defer n.lock.Unlock()
 
-	close(b.stop)
+	close(n.stop)
 }
