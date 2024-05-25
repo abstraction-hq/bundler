@@ -8,7 +8,7 @@ import (
 	"runtime"
 	"syscall"
 
-	"github.com/abstraction-hq/abstraction-wallet-bundler/bundler"
+	"github.com/abstraction-hq/abstraction-wallet-node/node"
 )
 
 func Fatalf(format string, args ...interface{}) {
@@ -28,7 +28,7 @@ func Fatalf(format string, args ...interface{}) {
 	os.Exit(1)
 }
 
-func StartBundler(e *bundler.Bundler) {
+func StartNode(e *node.Node) {
 	if err := e.Start(); err != nil {
 		Fatalf("Fait to start ETL %v", err)
 	}

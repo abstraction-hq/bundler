@@ -4,7 +4,7 @@ Copyright © 2024 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"github.com/abstraction-hq/abstraction-wallet-bundler/bundler"
+	"github.com/abstraction-hq/abstraction-wallet-node/node"
 	"github.com/spf13/cobra"
 )
 
@@ -19,10 +19,10 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		bundler, _ := bundler.NewBundler();
-		StartBundler(bundler)
+		node, _ := node.NewNode();
+		StartNode(node)
 
-		bundler.Wait()
+		node.Wait()
 	},
 }
 
