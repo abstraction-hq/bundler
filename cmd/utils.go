@@ -8,7 +8,7 @@ import (
 	"runtime"
 	"syscall"
 
-	"github.com/abstraction-hq/abstraction-wallet-node/node"
+	"github.com/abstraction-hq/bundler/node"
 )
 
 func Fatalf(format string, args ...interface{}) {

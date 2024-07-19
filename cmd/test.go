@@ -4,7 +4,7 @@ Copyright © 2024 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"github.com/abstraction-hq/abstraction-wallet-node/config"
+	"github.com/abstraction-hq/bundler/config"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )

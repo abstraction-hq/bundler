@@ -4,7 +4,8 @@ Copyright © 2024 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"github.com/abstraction-hq/abstraction-wallet-node/node"
+	"github.com/abstraction-hq/bundler/config"
+	"github.com/abstraction-hq/bundler/node"
 	"github.com/spf13/cobra"
 )
 
@@ -19,7 +20,9 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		node, _ := node.NewNode();
+		network := cmd.Flags().Lookup("network").Value
+		conf := config.NewConfig(network.String())
+		node, _ := node.NewNode(conf)
 		StartNode(node)
 
 		node.Wait()

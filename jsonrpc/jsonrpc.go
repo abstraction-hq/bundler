@@ -1,28 +1,40 @@
 package jsonrpc
 
 import (
-	"github.com/abstraction-hq/abstraction-wallet-node/config"
-	"github.com/ethereum/go-ethereum/crypto"
+	"net"
+	"net/http"
+	"net/rpc"
+
+	"github.com/abstraction-hq/bundler/config"
 	log "github.com/inconshreveable/log15"
 )
 
 var logger = log.New("module", "jsonrpc")
 
 type JsonRpc struct {
-	conf config.Config
+	conf *config.Config
 }
 
-func (j *JsonRpc) dump() {
-	privateKey, err := crypto.HexToECDSA(j.conf.PrivateKey)
-	if err != nil {
-		logger.Error("Fail to create ECDSA", "detail", err)
-	}
+type TimeServer int64
 
-	logger.Info("Private key", "Detail", privateKey)
-}
-
-func NewJsonRpc(conf config.Config) (*JsonRpc, error) {
+func NewJsonRpc(conf *config.Config) (*JsonRpc, error) {
 	return &JsonRpc{
 		conf,
 	}, nil
+}
+
+func (j *JsonRpc) Start() error {
+	timeserver := new(TimeServer)
+	// Register RPC server
+	rpc.Register(timeserver)
+	rpc.HandleHTTP()
+	// Listen for requests on port 1234
+	l, e := net.Listen("tcp", ":2233")
+	if e != nil {
+		logger.Error("listen error:", "error", e)
+	}
+	http.Serve(l, nil)
+
+	logger.Info("JsonRPC server started")
+	return nil
 }

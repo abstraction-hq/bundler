@@ -1,4 +1,4 @@
-module github.com/abstraction-hq/abstraction-wallet-node
+module github.com/abstraction-hq/bundler
 
 go 1.20
 

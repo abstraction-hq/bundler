@@ -3,18 +3,24 @@ package node
 import (
 	"sync"
 
+	"github.com/abstraction-hq/bundler/config"
+	"github.com/abstraction-hq/bundler/jsonrpc"
 	log "github.com/inconshreveable/log15"
 )
 
 var logger = log.New("module", "node")
 
 type Node struct {
+	conf *config.Config
 	lock sync.RWMutex
+	rpc  *jsonrpc.JsonRpc
 	stop chan struct{}
 }
 
-func NewNode() (*Node, error) {
-	return &Node{}, nil
+func NewNode(conf *config.Config) (*Node, error) {
+	return &Node{
+		conf: conf,
+	}, nil
 }
 
 func (n *Node) Start() error {
@@ -23,6 +29,8 @@ func (n *Node) Start() error {
 	defer n.lock.Unlock()
 
 	// TODO: add services
+	n.rpc, _ = jsonrpc.NewJsonRpc(n.conf)
+	n.rpc.Start()
 
 	n.stop = make(chan struct{})
 	return nil
